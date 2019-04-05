@@ -47,10 +47,19 @@ class Board extends React.Component {
     return <Square value={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
   }
 
+  renderResetBtn() {
+    return <button onClick={() => {
+      this.setState({
+        squares: Array(9).fill(null),
+        xIsNext: true,
+        winner: null,
+      })
+    }} >Reset Board</button>;
+  }
 
   handleClick(i) {
 
-    if(this.state.winner){
+    if (this.state.winner) {
       return;
     }
 
@@ -69,9 +78,10 @@ class Board extends React.Component {
 
     const winner = calculateWinner(this.state.squares);
     let status;
+    const nextPlayer = (this.state.xIsNext ? 'X' : 'O');
     if (winner) {
       status = 'Winner: ' + winner;
-      if(!this.state.winner){
+      if (!this.state.winner) {
         this.setState({
           squares: this.state.squares.slice(),
           xIsNext: this.state.xIsNext,
@@ -79,11 +89,12 @@ class Board extends React.Component {
         });
       }
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next player: ' + nextPlayer;
     }
 
+
     return (
-      <div>
+      <div className={'player' + nextPlayer}>
         <div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
@@ -100,7 +111,11 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
+        <div>
+          {this.renderResetBtn()}
+        </div>
       </div>
+
     );
   }
 }
@@ -113,6 +128,7 @@ class Game extends React.Component {
           <Board />
         </div>
         <div className="game-info">
+
           <div>{/* status */}</div>
           <ol>{/* TODO */}</ol>
         </div>
